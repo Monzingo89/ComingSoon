@@ -1,69 +1,64 @@
-$(window).load(function(){
-     $('.preloader').fadeOut('slow');
-});
+
+(function ($) {
+    "use strict";
+
+    /*==================================================================
+    [ Validate ]*/
+    var input = $('.validate-input .input100');
+
+    $('.validate-form').on('submit',function(){
+        var check = true;
+
+        for(var i=0; i<input.length; i++) {
+            if(validate(input[i]) == false){
+                showValidate(input[i]);
+                check=false;
+            }
+        }
+
+        return check;
+    });
 
 
-/* =Main INIT Function
--------------------------------------------------------------- */
-function initializeSite() {
+    $('.validate-form .input100').each(function(){
+        $(this).focus(function(){
+           hideValidate(this);
+        });
+    });
 
-	"use strict";
+    function validate (input) {
+        if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
+            if($(input).val().trim().match(/^([a-zA-Z0-9_\-\.]+)@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.)|(([a-zA-Z0-9\-]+\.)+))([a-zA-Z]{1,5}|[0-9]{1,3})(\]?)$/) == null) {
+                return false;
+            }
+        }
+        else {
+            if($(input).val().trim() == ''){
+                return false;
+            }
+        }
+    }
 
-	//OUTLINE DIMENSION AND CENTER
-	(function() {
-	    function centerInit(){
+    function showValidate(input) {
+        var thisAlert = $(input).parent();
 
-			var sphereContent = $('.sphere'),
-				sphereHeight = sphereContent.height(),
-				parentHeight = $(window).height(),
-				topMargin = (parentHeight - sphereHeight) / 2;
+        $(thisAlert).addClass('alert-validate');
+    }
 
-			sphereContent.css({
-				"margin-top" : topMargin+"px"
-			});
+    function hideValidate(input) {
+        var thisAlert = $(input).parent();
 
-			var heroContent = $('.hero'),
-				heroHeight = heroContent.height(),
-				heroTopMargin = (parentHeight - heroHeight) / 2;
+        $(thisAlert).removeClass('alert-validate');
+    }
 
-			heroContent.css({
-				"margin-top" : heroTopMargin+"px"
-			});
+    /*==================================================================
+    [ Modal ]*/
+    $('.modal-subscribe').on('click',function(e){
+        e.stopPropagation();
+    })
+    
+    $('.btn-close-modal').on('click', function(){
+        $('#subscribe').modal('hide');
+    });
 
-	    }
-
-	    $(document).ready(centerInit);
-		$(window).resize(centerInit);
-	})();
-
-	// Init effect 
-	$('#scene').parallax();
-
-};
-/* END ------------------------------------------------------- */
-
-/* =Document Ready Trigger
--------------------------------------------------------------- */
-$(window).load(function(){
-
-	initializeSite();
-	(function() {
-		setTimeout(function(){window.scrollTo(0,0);},0);
-	})();
-
-});
-/* END ------------------------------------------------------- */
-
-
-$('#countdown').countdown({
-	date: "Mar 25 2021",
-	render: function(data) {
-	  var el = $(this.el);
-	  el.empty()
-	    //.append("<div>" + this.leadingZeros(data.years, 4) + "<span>years</span></div>")
-	    .append("<div>" + this.leadingZeros(data.days, 2) + " <span>days</span></div>")
-	    .append("<div>" + this.leadingZeros(data.hours, 2) + " <span>hrs</span></div>")
-	    .append("<div>" + this.leadingZeros(data.min, 2) + " <span>min</span></div>")
-	    .append("<div>" + this.leadingZeros(data.sec, 2) + " <span>sec</span></div>");
-	}
-});
+})(jQuery);
